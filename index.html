@@ -57,7 +57,7 @@
       flex:0 0 auto;
     }
     h1{margin:0; font-size:20px; line-height:1.15; letter-spacing:.2px;}
-    .subtitle{margin:4px 0 0 0; color:var(--muted); font-size:13.5px; max-width:980px; line-height:1.45;}
+    .subtitle{margin:4px 0 0 0; color:var(--muted); font-size:13.5px; max-width:1000px; line-height:1.45;}
 
     .pills{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
     .pill{
@@ -172,7 +172,6 @@
       color: rgba(255,255,255,.86);
     }
 
-    /* folder tree visuals */
     pre.tree{
       margin: 10px 0 0 0;
       padding: 12px;
@@ -187,7 +186,6 @@
       white-space: pre;
     }
 
-    /* Right column: rules */
     .rule{
       border-radius: 16px;
       border:1px solid rgba(255,255,255,.12);
@@ -197,7 +195,6 @@
     }
     .rule h3{margin:0; font-size:13.5px;}
     .rule p{margin:6px 0 0 0; color:var(--muted); font-size:12.8px; line-height:1.4;}
-    .rule ul{margin:8px 0 0 18px; color:rgba(255,255,255,.82); font-size:12.8px; line-height:1.5;}
     .kbd{
       font-family: var(--mono);
       font-size:12px;
@@ -234,25 +231,26 @@
         <div>
           <h1>Altrio — Pijlers & Mappenstructuur (visueel)</h1>
           <p class="subtitle">
-            Uniform stramien per pijler: <strong>Pijler → Provincie/Nationaal → Entiteit → Initiatief → 6 vaste submappen</strong>.
-            Jij wil <strong>RIZIV/Beleid</strong> als extra pijler zonder provinciale indeling: die staat apart als “Nationaal”.
+            Uniform stramien per pijler: <strong>Pijler → Provincie/Nationaal → Entiteit → Initiatief</strong>.
+            Gebruikers kiezen zelf hun submappen binnen een initiatief.
+            <strong>RIZIV/Beleid</strong> is een extra pijler zonder provinciale indeling (alleen “Nationaal”).
           </p>
         </div>
       </div>
       <div class="pills">
         <div class="pill">✅ 8 + 1 pijlers</div>
-        <div class="pill">📁 1 structuur</div>
+        <div class="pill">📁 1 logica</div>
         <div class="pill">🧩 Entiteit = account</div>
         <div class="pill">🧷 Initiatief = dossier</div>
       </div>
     </header>
 
     <div class="grid">
-      <!-- LEFT: pillars + trees -->
+      <!-- LEFT -->
       <section class="card">
         <div class="hd">
           <h2>Alle pijlers met voorbeeld-structuur</h2>
-          <p class="hint">Gebruik dezelfde submappen in elk initiatief. Geen uitzonderingen.</p>
+          <p class="hint">Geen verplichte submappen: de structuur stopt op “Initiatief”.</p>
         </div>
         <div class="body">
 
@@ -269,138 +267,81 @@
 
           <div class="pillars">
 
-            <!-- 1 CORE -->
             <div class="pillar" style="border-color: rgba(34,197,94,.30); background: rgba(34,197,94,.10);">
               <div class="badge"><span class="dot c-core"></span> 1) Thuisverpleging (CORE)</div>
               <p>Interne werking per provincie/teams.</p>
               <pre class="tree">01_Thuisverpleging_CORE
 └─ Antwerpen
    └─ Team Kempen
-      └─ Optimalisatie ochtendrondes
-         ├─ 01_Afspraken
-         ├─ 02_Proces_Protocol
-         ├─ 03_Data_KPI
-         ├─ 04_Compliance
-         ├─ 05_Communicatie
-         └─ 06_Oplevering</pre>
+      └─ Optimalisatie ochtendrondes</pre>
             </div>
 
-            <!-- 2 HAP -->
             <div class="pillar">
               <div class="badge"><span class="dot c-support"></span> 2) HAP & Eerstelijnsondersteuning</div>
               <p>HAP’s en praktijken als entiteiten (accounts).</p>
               <pre class="tree">02_HAP_Eerstelijn
 └─ Oost-Vlaanderen
    └─ HAP Waasland
-      └─ Nurse-led consult
-         ├─ 01_Afspraken
-         ├─ 02_Proces_Protocol
-         ├─ 03_Data_KPI
-         ├─ 04_Compliance
-         ├─ 05_Communicatie
-         └─ 06_Oplevering</pre>
+      └─ Nurse-led consult</pre>
             </div>
 
-            <!-- 3 WZC -->
             <div class="pillar">
               <div class="badge"><span class="dot c-wzc"></span> 3) WZC & Voorzieningenzorg</div>
               <p>WZC/voorzieningen als entiteiten (accounts).</p>
               <pre class="tree">03_WZC_Voorzieningen
 └─ West-Vlaanderen
    └─ WZC De Linde
-      └─ Wondzorgafspraken
-         ├─ 01_Afspraken
-         ├─ 02_Proces_Protocol
-         ├─ 03_Data_KPI
-         ├─ 04_Compliance
-         ├─ 05_Communicatie
-         └─ 06_Oplevering</pre>
+      └─ Wondzorgafspraken</pre>
             </div>
 
-            <!-- 4 Groei -->
             <div class="pillar">
               <div class="badge"><span class="dot c-growth"></span> 4) Verpleegpraktijken (Groei)</div>
               <p>Praktijken als entiteiten: aansluiten/overname/integratie.</p>
               <pre class="tree">04_Verpleegpraktijken_Groei
 └─ Antwerpen
    └─ Praktijk Janssens (Turnhout)
-      └─ Aansluitingsdossier
-         ├─ 01_Afspraken
-         ├─ 02_Proces_Protocol
-         ├─ 03_Data_KPI
-         ├─ 04_Compliance
-         ├─ 05_Communicatie
-         └─ 06_Oplevering</pre>
+      └─ Aansluitingsdossier</pre>
             </div>
 
-            <!-- 5 Transmuraal -->
             <div class="pillar">
               <div class="badge"><span class="dot c-trans"></span> 5) Transmurale Zorg</div>
               <p>Ziekenhuizen als entiteiten; meerdere initiatieven per ziekenhuis.</p>
               <pre class="tree">05_Transmurale_Zorg
 └─ Antwerpen
    └─ ZAS Antwerpen
-      └─ Nazorg heupprothese
-         ├─ 01_Afspraken
-         ├─ 02_Proces_Protocol
-         ├─ 03_Data_KPI
-         ├─ 04_Compliance
-         ├─ 05_Communicatie
-         └─ 06_Oplevering</pre>
+      └─ Nazorg heupprothese</pre>
             </div>
 
-            <!-- 6 Zorgstart -->
             <div class="pillar" style="border-color: rgba(251,113,133,.28); background: rgba(251,113,133,.08);">
               <div class="badge"><span class="dot c-zorgstart"></span> 6) Zorgstart</div>
               <p>Platform + lokale implementaties. Vaak ook “Nationaal”.</p>
               <pre class="tree">06_Zorgstart
 └─ Nationaal
    └─ Platformontwikkeling
-      └─ Matchingflow v1
-         ├─ 01_Afspraken
-         ├─ 02_Proces_Protocol
-         ├─ 03_Data_KPI
-         ├─ 04_Compliance
-         ├─ 05_Communicatie
-         └─ 06_Oplevering</pre>
+      └─ Matchingflow v1</pre>
             </div>
 
-            <!-- 7 Wachtpost -->
             <div class="pillar">
               <div class="badge"><span class="dot c-triage"></span> 7) Wachtposten & Triage</div>
               <p>Wachtposten als entiteiten; per wachtpost 1+ initiatieven.</p>
               <pre class="tree">07_Wachtposten_Triage
 └─ Limburg
    └─ Wachtpost Geel
-      └─ Triage implementatie
-         ├─ 01_Afspraken
-         ├─ 02_Proces_Protocol
-         ├─ 03_Data_KPI
-         ├─ 04_Compliance
-         ├─ 05_Communicatie
-         └─ 06_Oplevering</pre>
+      └─ Triage implementatie</pre>
             </div>
 
-            <!-- 8 Flexizorg -->
             <div class="pillar">
               <div class="badge"><span class="dot c-flex"></span> 8) Flexizorg</div>
               <p>Platform + accounts (instellingen/ziekenhuizen) per provincie/nationaal.</p>
               <pre class="tree">08_Flexizorg
 └─ Nationaal
    └─ Platformontwikkeling
-      └─ MVP roadmap
-         ├─ 01_Afspraken
-         ├─ 02_Proces_Protocol
-         ├─ 03_Data_KPI
-         ├─ 04_Compliance
-         ├─ 05_Communicatie
-         └─ 06_Oplevering</pre>
+      └─ MVP roadmap</pre>
             </div>
 
-            <!-- 9 RIZIV / beleid (no provinces) -->
             <div class="pillar" style="border-color: rgba(248,113,113,.30); background: rgba(248,113,113,.08);">
-              <div class="badge"><span class="dot c-policy"></span> 9) RIZIV / Beleid (pijler, nationaal)</div>
-              <p>Geen provincies. Dit is “bovenbouw”: wetgeving, nomenclatuur, mandaten, audit, richtlijnen.</p>
+              <div class="badge"><span class="dot c-policy"></span> 9) RIZIV / Beleid (nationaal)</div>
+              <p>Geen provincies. Dit is bovenbouw: wetgeving, nomenclatuur, mandaten, audit, richtlijnen.</p>
               <pre class="tree">09_RIZIV_Beleid
 └─ Nationaal
    ├─ Nomenclatuur & interpretaties
@@ -414,11 +355,11 @@
         </div>
       </section>
 
-      <!-- RIGHT: rules -->
+      <!-- RIGHT -->
       <aside class="card">
         <div class="hd">
           <h2>Spelregels (zodat het werkt)</h2>
-          <p class="hint">Als je deze 5 regels bewaakt, wordt het vanzelf helder.</p>
+          <p class="hint">Kort en duidelijk — zonder verplichte submappen.</p>
         </div>
         <div class="body">
           <div class="rule">
@@ -432,36 +373,24 @@
           </div>
 
           <div class="rule">
-            <h3>Regel 3 — Vaste 6 submappen</h3>
-            <ul>
-              <li><span class="kbd">01_Afspraken</span> (beslissingen, MoM, contracten)</li>
-              <li><span class="kbd">02_Proces_Protocol</span> (flows, werkafspraken, inhoud)</li>
-              <li><span class="kbd">03_Data_KPI</span> (metingen, dashboards, evaluatie)</li>
-              <li><span class="kbd">04_Compliance</span> (RIZIV/AVG/mandaten — indien relevant)</li>
-              <li><span class="kbd">05_Communicatie</span> (intern/extern, decks, mails)</li>
-              <li><span class="kbd">06_Oplevering</span> (overdracht, “done”, lessons learned)</li>
-            </ul>
+            <h3>Regel 3 — Nationaal is een bewuste keuze</h3>
+            <p>Gebruik <span class="kbd">Nationaal</span> voor platformen, templates of initiatieven die provincie-overstijgend zijn.</p>
           </div>
 
           <div class="rule">
-            <h3>Regel 4 — Nationaal als expliciete keuze</h3>
-            <p>Gebruik <span class="kbd">Nationaal</span> enkel voor platformen, templates of initiatieven die écht provincie-overstijgend zijn.</p>
+            <h3>Regel 4 — RIZIV/Beleid is aparte pijler</h3>
+            <p>Zoals jij wil: geen provincies, enkel <span class="kbd">Nationaal</span> met subdomeinen.</p>
           </div>
 
           <div class="rule">
-            <h3>Regel 5 — RIZIV/Beleid is een eigen pijler</h3>
-            <p>Omdat jij dit als aparte lijn wil: geen provincies, enkel <span class="kbd">Nationaal</span> met duidelijke subdomeinen.</p>
-          </div>
-
-          <div class="rule">
-            <h3>Praktische tip</h3>
-            <p>Maak één “template projectmap” met de 6 submappen en kopieer die telkens.</p>
+            <h3>Regel 5 — Vrijheid binnen initiatief</h3>
+            <p>Teams mogen binnen een initiatief zelf mappen maken (bv. “Afspraken”, “Data”, “Comms”), zolang de bovenliggende structuur klopt.</p>
           </div>
         </div>
       </aside>
     </div>
 
-    <footer>Alles in één HTML. Printvriendelijk (Ctrl+P). Pas namen/voorbeelden gerust aan.</footer>
+    <footer>Alles in één HTML. Printvriendelijk (Ctrl+P). Pas voorbeelden gerust aan.</footer>
   </div>
 </body>
 </html>
