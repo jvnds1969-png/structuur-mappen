@@ -2,117 +2,673 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AI Ontslagbrief → Zorgtaken (Flexizorg) | Schema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Altrio — Groepsarchitectuur + Forza Altrio Check (demo)</title>
 
-  <!-- ✅ KOPPEL HIER DEZELFDE CSS ALS /schema/ GEBRUIKT -->
-  <!-- Voorbeelden (kies degene die klopt in jouw repo): -->
-  <!-- <link rel="stylesheet" href="./style.css"> -->
-  <!-- <link rel="stylesheet" href="../style.css"> -->
-  <!-- <link rel="stylesheet" href="/style.css"> -->
+  <style>
+    :root{
+      --bg0:#070b13; --bg1:#0b1220;
+      --panel:rgba(255,255,255,.06); --panel2:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92); --muted:rgba(255,255,255,.68);
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+      --r:18px;
+
+      --core:#22c55e;
+      --support:#60a5fa;
+      --growth:#34d399;
+      --trans:#f59e0b;
+      --zorgstart:#fb7185;
+      --triage:#a78bfa;
+      --compliance:#f87171;
+      --partners:#38bdf8;
+
+      --ok:#22c55e;
+      --bad:#ef4444;
+
+      --chipbg:rgba(255,255,255,.06);
+      --chipbd:rgba(255,255,255,.14);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1100px 600px at 12% 10%, rgba(96,165,250,.25), transparent 55%),
+        radial-gradient(900px 600px at 86% 12%, rgba(167,139,250,.24), transparent 55%),
+        radial-gradient(900px 700px at 50% 96%, rgba(34,197,94,.18), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 30%, var(--bg1) 100%);
+      min-height:100vh;
+      padding:28px;
+    }
+
+    .wrap{max-width: 1280px; margin:0 auto;}
+    header{
+      display:flex; gap:18px; align-items:flex-start; justify-content:space-between;
+      margin-bottom:16px;
+    }
+    .brand{display:flex; gap:14px; align-items:center;}
+    .logo{
+      width:46px;height:46px;border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
+        linear-gradient(135deg, rgba(34,197,94,.9), rgba(96,165,250,.85));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      flex:0 0 auto;
+    }
+    h1{margin:0; font-size:20px; line-height:1.15; letter-spacing:.2px;}
+    .subtitle{margin:4px 0 0 0; color:var(--muted); font-size:13.5px; max-width:920px; line-height:1.45;}
+
+    .pills{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+    .pill{
+      padding:10px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      font-size: 12.5px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 16px;
+      align-items:start;
+    }
+    @media (max-width: 1020px){
+      header{flex-direction:column; align-items:flex-start;}
+      .pills{justify-content:flex-start;}
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    .card{
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hd{
+      padding: 16px 16px 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      display:flex; align-items:flex-start; justify-content:space-between; gap: 12px;
+    }
+    .hd h2{margin:0; font-size:14px; letter-spacing:.2px;}
+    .hint{margin:0; color:var(--muted); font-size:12.5px; line-height:1.35;}
+    .body{padding:16px;}
+
+    .toolbar{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin: 0 0 12px 0;
+      align-items:center;
+    }
+    .btn{
+      cursor:pointer;
+      padding:8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      font-size: 12.5px;
+    }
+    .btn.active{
+      border-color: rgba(255,255,255,.28);
+      background: rgba(255,255,255,.10);
+    }
+    .search{
+      flex:1 1 220px;
+      display:flex; gap:8px; align-items:center;
+      padding:8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+    }
+    .search input{
+      width:100%;
+      border:none; outline:none;
+      background:transparent;
+      color: rgba(255,255,255,.92);
+      font-size: 12.5px;
+    }
+    .search input::placeholder{color: rgba(255,255,255,.55);}
+
+    .section{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+      padding: 14px;
+      margin-bottom: 12px;
+      position:relative;
+      overflow:hidden;
+    }
+    .section::before{
+      content:"";
+      position:absolute; inset:-40% -30% auto auto;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 58%);
+      transform: rotate(10deg);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .row{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+    .kicker{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: rgba(255,255,255,.88);
+      white-space:nowrap;
+    }
+    .dot{width:10px;height:10px;border-radius:50%; background: currentColor; opacity:.95; box-shadow: 0 0 0 3px rgba(255,255,255,.10);}
+    .title{margin:8px 0 0 0; font-size:16px; letter-spacing:.2px;}
+    .desc{margin:6px 0 0 0; color:var(--muted); font-size:13px; line-height:1.45; max-width: 82ch;}
+
+    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+    .chip{
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--chipbd);
+      background: var(--chipbg);
+      color: rgba(255,255,255,.86);
+      white-space:nowrap;
+    }
+
+    .accent-core{color:var(--core)}
+    .accent-support{color:var(--support)}
+    .accent-growth{color:var(--growth)}
+    .accent-trans{color:var(--trans)}
+    .accent-zorgstart{color:var(--zorgstart)}
+    .accent-triage{color:var(--triage)}
+    .accent-compliance{color:var(--compliance)}
+    .accent-partners{color:var(--partners)}
+
+    /* Forza check extras */
+    .mini-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 760px){ .mini-grid{grid-template-columns: 1fr;} }
+
+    .mini{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 14px;
+    }
+    .mini h3{margin:0; font-size:13.5px; letter-spacing:.2px;}
+    .mini p{margin:6px 0 0 0; color:var(--muted); font-size:12.5px; line-height:1.35;}
+
+    .field{
+      display:grid; gap:6px;
+      margin-top:10px;
+    }
+    .field span{
+      font-size:12px;
+      color: rgba(255,255,255,.78);
+    }
+    .in{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.92);
+      outline:none;
+    }
+    .scoreRow{
+      display:flex; gap:10px; align-items:center; margin-top:10px;
+    }
+    .badge{
+      font-size: 11.5px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.86);
+      white-space:nowrap;
+    }
+
+    .progressWrap{
+      margin-top: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+      height: 10px;
+    }
+    .progressBar{
+      height: 100%;
+      width: 0%;
+      background: var(--bad);
+      transition: width .15s ease, background-color .15s ease;
+    }
+
+    .scorePanel{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      padding: 12px;
+      margin-top: 10px;
+    }
+    .scorePanel.good{
+      border-color: rgba(34,197,94,.35);
+      background: rgba(34,197,94,.10);
+    }
+    .scorePanel.bad{
+      border-color: rgba(239,68,68,.40);
+      background: rgba(239,68,68,.10);
+    }
+
+    /* Right column */
+    .list{display:grid; gap:10px;}
+    .item{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+    }
+    .icon{
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+      font-size:14px;
+    }
+    .item h4{margin:0; font-size:13px;}
+    .item p{margin:4px 0 0 0; color:var(--muted); font-size:12.5px; line-height:1.35;}
+
+    footer{
+      margin-top: 14px;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      text-align:center;
+    }
+
+    @media print{
+      body{ background:#fff; color:#111; padding:0; }
+      .card{ box-shadow:none; background:#fff; border:1px solid #ddd; }
+      .pill{ display:none; }
+      .hint,.subtitle,.desc,.mini p,.item p{ color:#333; }
+      footer{ color:#666; }
+      .btn,.search{ display:none; }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Altrio — Groepsstructuur + Forza Altrio Check</h1>
+          <p class="subtitle">
+            Demo om je verhaal snel te tonen én een aanvraag meteen te scoren met de Forza Altrio Check.
+            De totaalscore wordt omgerekend naar <strong>100%</strong>. Alles onder <strong>80%</strong> kleurt <strong>rood</strong>.
+          </p>
+        </div>
+      </div>
+      <div class="pills">
+        <div class="pill">🧩 Structuur = pijlers</div>
+        <div class="pill">🏷️ Labels = focus</div>
+        <div class="pill">📊 Forza score naar %</div>
+        <div class="pill">🔴 &lt; 80% = rood</div>
+      </div>
+    </header>
 
-  <h1>AI Ontslagbrief → Zorgtaken (Flexizorg)</h1>
-  <p>Geautomatiseerde administratieve triage met verplichte menselijke goedkeuring (decision support).</p>
+    <div class="grid">
+      <!-- LEFT -->
+      <section class="card">
+        <div class="hd">
+          <h2>Overzicht</h2>
+          <p class="hint">Gebruik de Forza-check bovenaan voor een snelle intake en score.</p>
+        </div>
 
-  <h2>1. INTAKE ONTSLAGBRIEF</h2>
-  <p>Input</p>
-  <ul>
-    <li>Secure upload (POC: één kanaal)</li>
-    <li>PDF / DOCX / scans</li>
-    <li>Virus-scan, metadata, versleutelde opslag</li>
-  </ul>
-  <p>→ Output: Veilig opgeslagen document klaar voor extractie</p>
+        <div class="body">
+          <!-- FORZA CHECK -->
+          <div class="section" id="forzaCheck" style="border-color: rgba(255,255,255,.18);">
+            <div class="row">
+              <div>
+                <div class="kicker"><span class="dot" style="color:#fff"></span> Forza Altrio Check — intake</div>
+                <h3 class="title">Nieuwe aanvraag registreren + scoren</h3>
+                <p class="desc">
+                  Vul instelling + activiteit in, geef 3 scores (0–5). We vertalen naar <strong>percentage</strong> (0–100%).
+                </p>
+              </div>
+              <div class="chips">
+                <span class="chip">3 scores (0–5)</span>
+                <span class="chip">→ % op 100</span>
+                <span class="chip">Drempel: 80%</span>
+              </div>
+            </div>
 
-  <h2>2. EXTRACTIE & STRUCTURERING</h2>
-  <ul>
-    <li>Document Intelligence: layout parsing + OCR voor scans</li>
-    <li>Tekstextractie en structurering van kerninfo:
-      <ul>
-        <li>Diagnose/context (hoog niveau)</li>
-        <li>Zorgnoden</li>
-        <li>Medicatie/handelingen</li>
-        <li>Hulpmiddelen</li>
-        <li>Risico’s</li>
-        <li>Timing</li>
-      </ul>
-    </li>
-  </ul>
-  <p>→ Output: Gestructureerde zorginformatie</p>
+            <div class="mini-grid">
+              <div class="mini" style="grid-column: 1 / -1;">
+                <h3>1) Basisinfo</h3>
+                <p>Voor snelle label/overleg (niet opgeslagen naar Odoo in deze demo).</p>
 
-  <h2>3. AI TAAKGENERATIE</h2>
-  <ul>
-    <li>AI pipeline (LLM + regels/taxonomie) met strikte JSON-output</li>
-    <li>Per taak:
-      <ul>
-        <li>Taakbeschrijving</li>
-        <li>Discipline/rol</li>
-        <li>Frequentie/duur/looptijd (indien vermeld)</li>
-        <li>Urgentie + startdatum</li>
-        <li>Benodigde competenties/attesten (waar mogelijk)</li>
-        <li>Confidence-score</li>
-        <li>Bronpassage (“evidence”)</li>
-      </ul>
-    </li>
-    <li>Guardrails: geen taak zonder bronverwijzing</li>
-  </ul>
-  <p>→ Output: Voorstel takenpakket met bronverwijzingen</p>
+                <div class="field">
+                  <span>Naam instelling</span>
+                  <input class="in" id="instellingNaam" type="text" placeholder="bv. Ziekenhuis X (Antwerpen)">
+                </div>
 
-  <h2>4. HUMAN-IN-THE-LOOP REVIEW</h2>
-  <ul>
-    <li>Sociale dienst kijkt na, past aan, voegt toe, verwijdert</li>
-    <li>Audit trail: wie keurde wat goed, wanneer, en op basis van welke bronpassage</li>
-  </ul>
-  <p>→ Output: Goedgekeurd takenpakket</p>
+                <div class="field">
+                  <span>Aard van de activiteit</span>
+                  <input class="in" id="activiteitAard" type="text" placeholder="bv. nazorg heupprothese (transmuraal zorgpad)">
+                </div>
+              </div>
 
-  <h2>5. PUBLICATIE NAAR FLEXIZORG</h2>
-  <ul>
-    <li>Mapping naar Flexizorg job/task model</li>
-    <li>Publicatie als draft/concept (POC: sandbox)</li>
-    <li>Terugkoppeling ID/status</li>
-  </ul>
-  <p>→ Output: Takenpakket gepubliceerd op Flexizorg</p>
+              <div class="mini">
+                <h3>2) Score — Zorg-ecosysteem</h3>
+                <p>In welke mate versterkt dit Altrio’s positie en samenwerking?</p>
+                <div class="scoreRow">
+                  <input id="scoreEco" type="range" min="0" max="5" step="1" value="0" style="width:100%;">
+                  <span class="badge" id="scoreEcoVal">0/5</span>
+                </div>
+              </div>
 
-  <h2>6. MATCHING & INVULLING</h2>
-  <ul>
-    <li>Zorgprofessionals tekenen in</li>
-    <li>Time-to-fill en status terug naar sociale dienst</li>
-  </ul>
-  <p>→ Output: Zorg effectief ingevuld na ontslag</p>
+              <div class="mini">
+                <h3>3) Score — Waardecreatie</h3>
+                <p>Creëert dit waarde (kwaliteit/financieel/impact)?</p>
+                <div class="scoreRow">
+                  <input id="scoreVal" type="range" min="0" max="5" step="1" value="0" style="width:100%;">
+                  <span class="badge" id="scoreValVal">0/5</span>
+                </div>
+              </div>
 
-  <h2>7. MONITORING & LEARNING</h2>
-  <ul>
-    <li>Logging/monitoring, DLP, RBAC, retentie</li>
-    <li>KPI’s: tijdswinst triage, doorlooptijd discharge, acceptatiegraad voorstellen, fill-rate</li>
-    <li>Feedback loop: correcties terug naar model/regels</li>
-  </ul>
-  <p>→ Output: Continu verbeterende AI-ondersteuning</p>
+              <div class="mini">
+                <h3>4) Score — Continu verbeteren</h3>
+                <p>Helpt dit ons structureel beter worden?</p>
+                <div class="scoreRow">
+                  <input id="scoreCI" type="range" min="0" max="5" step="1" value="0" style="width:100%;">
+                  <span class="badge" id="scoreCIVal">0/5</span>
+                </div>
+              </div>
 
-  <h2>PROGRAMMAFASERING</h2>
+              <div class="mini" style="grid-column: 1 / -1;">
+                <h3>Resultaat</h3>
+                <p>Percentage is gebaseerd op (totaal/15)*100. Onder 80% = rood.</p>
 
-  <h3>Fase 0 — POC</h3>
-  <ul>
-    <li>End-to-end flow: Upload → Extractie → AI taakvoorstel (evidence) → Review/approve → Draft post</li>
-    <li>Evaluatie op representatieve set ontslagbrieven</li>
-    <li>MVP scope-lock + Go/No-Go advies</li>
-  </ul>
+                <div class="scorePanel bad" id="scorePanel">
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                    <span class="badge" id="totalScore">Totaal: 0/15</span>
+                    <span class="badge" id="pctScore">0%</span>
+                    <span class="badge" id="labelScore">Label: —</span>
+                    <span class="badge" id="caseLabel">Case: —</span>
+                  </div>
 
-  <h3>Fase 1 — MVP (pilot-ready)</h3>
-  <ul>
-    <li>Inname via veilige upload of mailbox</li>
-    <li>Approval UI voor sociale dienst</li>
-    <li>Publicatie naar Flexizorg via API (concept → confirm → posten)</li>
-  </ul>
+                  <div class="progressWrap" aria-label="Score percentage">
+                    <div class="progressBar" id="progressBar"></div>
+                  </div>
+                </div>
 
-  <h3>Fase 2 — Zorgstart-integratie (richting jouw voorstel)</h3>
-  <ul>
-    <li>Deze “AI ontslagbrief → taken” module wordt een kerncomponent binnen Zorgstart (ontslag = eerste businessinsteek)</li>
-    <li>Output wordt niet enkel een takenlijst, maar ook: probleemgebieden → zorgbundels → taken per rol → matchmaking → gedeeld zorgplan</li>
-    <li>Gezamenlijke cockpit: sociale dienst + Zorgstart/Nurseline opvolging (status, alerts, contextwijzigingen)</li>
-  </ul>
+                <div style="height:10px"></div>
 
-  <p><strong>Kernprincipe:</strong> decision support met verplichte menselijke goedkeuring.</p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <button class="btn" id="btnReset">Reset</button>
+                  <button class="btn" id="btnSaveLocal" title="Slaat lokaal op in je browser (demo)">Bewaar (lokaal)</button>
+                  <button class="btn" id="btnLoadLocal" title="Laadt de laatst bewaarde demo-case">Laad laatst bewaarde</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <!-- ARCHITECTUUR (compact) -->
+          <div class="section" data-tags="Operationeel" style="border-color: rgba(34,197,94,.30);">
+            <div class="kicker"><span class="dot accent-core"></span> Kernactiviteit</div>
+            <h3 class="title">Thuisverpleging</h3>
+            <p class="desc">Fundament. De andere lijnen versterken instroom, uitstroom, groei en ecosysteempositie.</p>
+            <div class="chips">
+              <span class="chip">Operationeel</span><span class="chip">Kwaliteit</span><span class="chip">Schaalbaar</span>
+            </div>
+          </div>
+
+          <div class="section" data-tags="Operationeel" style="border-color: rgba(96,165,250,.26);">
+            <div class="kicker"><span class="dot accent-support"></span> Versterkers</div>
+            <h3 class="title">HAP-ondersteuning • WZC & Voorzieningenzorg</h3>
+            <p class="desc">Reguliere activiteiten die de kern versterken via samenwerking en stabieler werkaanbod.</p>
+            <div class="chips">
+              <span class="chip">Operationeel</span><span class="chip">Partnership</span>
+            </div>
+          </div>
+
+          <div class="section" data-tags="Commercieel" style="border-color: rgba(52,211,153,.26);">
+            <div class="kicker"><span class="dot accent-growth"></span> Groeimotor</div>
+            <h3 class="title">Verpleegpraktijken aansluiten</h3>
+            <p class="desc">Businesslijn om praktijken te overtuigen aan te sluiten: groei in coverage en werkgebied.</p>
+            <div class="chips">
+              <span class="chip">Commercieel</span><span class="chip">Opschaling</span>
+            </div>
+          </div>
+
+          <div class="section" data-tags="Operationeel Innovatie" style="border-color: rgba(245,158,11,.26);">
+            <div class="kicker"><span class="dot accent-trans"></span> Businesslijn</div>
+            <h3 class="title">Transmurale Zorg (ziekenhuis ↔ thuiszorg)</h3>
+            <p class="desc">Zorgpaden/OPAT… in transitie richting ontslagmanagement als dominante hefboom.</p>
+            <div class="chips">
+              <span class="chip">Innovatie</span><span class="chip">Operationeel</span><span class="chip">Ecosysteem</span>
+            </div>
+          </div>
+
+          <div class="section" data-tags="Innovatie Commercieel" style="border-color: rgba(251,113,133,.28); background: linear-gradient(135deg, rgba(251,113,133,.10), rgba(255,255,255,.04));">
+            <div class="kicker"><span class="dot accent-zorgstart"></span> Spin-off / Disruptief</div>
+            <h3 class="title">Zorgstart — Ontslagmanagement + Matchingplatform</h3>
+            <p class="desc">Regie van “ontslag → veilig thuis” + matching zorgvraag ↔ zorgaanbod (platformlogica).</p>
+            <div class="chips">
+              <span class="chip">Innovatie</span><span class="chip">Commercieel</span><span class="chip">Platform</span>
+            </div>
+          </div>
+
+          <div class="section" data-tags="Innovatie" style="border-color: rgba(167,139,250,.26);">
+            <div class="kicker"><span class="dot accent-triage"></span> Instroom-hefboom</div>
+            <h3 class="title">Wachtposten & Triage</h3>
+            <p class="desc">Impact op instroom (triage/consultvoorbereiding), complementair aan Zorgstart (uitstroom).</p>
+            <div class="chips">
+              <span class="chip">Innovatie</span><span class="chip">AI-ondersteund</span>
+            </div>
+          </div>
+
+          <div class="section" data-tags="Community Commercieel" style="border-color: rgba(56,189,248,.28);">
+            <div class="kicker"><span class="dot accent-partners"></span> Ecosysteemlaag</div>
+            <h3 class="title">Partners & Community-voordelen</h3>
+            <p class="desc">Commerciële/strategische spelers die community-waarde creëren voor leden.</p>
+            <div class="chips">
+              <span class="chip">Community</span><span class="chip">Commercieel</span><span class="chip">Value add</span>
+            </div>
+          </div>
+
+          <div class="section" data-tags="Operationeel" style="border-color: rgba(248,113,113,.28);">
+            <div class="kicker"><span class="dot accent-compliance"></span> Enabler</div>
+            <h3 class="title">RIZIV & Compliance-by-design</h3>
+            <p class="desc">Wetgeving, nomenclatuur, mandaten, gegevensdeling en audit trails proactief opvolgen.</p>
+            <div class="chips">
+              <span class="chip">Governance</span><span class="chip">Risk</span><span class="chip">Kwaliteit</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <aside class="card">
+        <div class="hd">
+          <h2>Opvolgmodel (admin)</h2>
+          <p class="hint">Gebruik de Forza-score als intake-gate: &lt;80% = herdenken.</p>
+        </div>
+        <div class="body">
+          <div class="list">
+            <div class="item">
+              <div class="icon">A</div>
+              <div>
+                <h4>Laag A — Businesslijnen</h4>
+                <p>Kern + instroom/uitstroom/groei + ecosysteempartners + governance.</p>
+              </div>
+            </div>
+            <div class="item">
+              <div class="icon">B</div>
+              <div>
+                <h4>Laag B — Entiteiten</h4>
+                <p>Ziekenhuis X, WZC Y, Praktijk Z… gekoppeld aan initiatieven.</p>
+              </div>
+            </div>
+            <div class="item">
+              <div class="icon">C</div>
+              <div>
+                <h4>Laag C — Initiatieven</h4>
+                <p>Afgebakend: owner, status, KPI’s, compliance-check, documenten.</p>
+              </div>
+            </div>
+            <div class="item">
+              <div class="icon">✅</div>
+              <div>
+                <h4>Intake gate</h4>
+                <p><strong>Forza %</strong> als eerste filter: onder 80% rood → bijsturen of stop.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+          <div class="mini">
+            <h3>Interpretatie (pas gerust aan)</h3>
+            <p>
+              <strong>&lt;80%</strong>: onvoldoende sterk → scope aanscherpen of stop.<br>
+              <strong>≥80%</strong>: sterk → doorzetten / prioriteren.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>Demo HTML (alles inline) • Printvriendelijk (Ctrl+P).</footer>
+  </div>
+
+  <script>
+    // =============================
+    // Forza Altrio Check (demo)
+    // - totaal /15 -> percentage
+    // - <80% => rood
+    // =============================
+    (function forzaCheckInit(){
+      const el = (id) => document.getElementById(id);
+
+      const nameEl = el("instellingNaam");
+      const actEl  = el("activiteitAard");
+
+      const eco = el("scoreEco");
+      const val = el("scoreVal");
+      const ci  = el("scoreCI");
+
+      const ecoVal = el("scoreEcoVal");
+      const valVal = el("scoreValVal");
+      const ciVal  = el("scoreCIVal");
+
+      const totalEl = el("totalScore");
+      const pctEl   = el("pctScore");
+      const labelEl = el("labelScore");
+      const caseEl  = el("caseLabel");
+
+      const scorePanel = el("scorePanel");
+      const bar = el("progressBar");
+
+      const btnReset = el("btnReset");
+      const btnSave  = el("btnSaveLocal");
+      const btnLoad  = el("btnLoadLocal");
+
+      if(!nameEl || !actEl || !eco || !val || !ci) return;
+
+      function round1(x){ return Math.round(x * 10) / 10; }
+
+      function compute(){
+        const sEco = Number(eco.value || 0);
+        const sVal = Number(val.value || 0);
+        const sCI  = Number(ci.value || 0);
+
+        const total = sEco + sVal + sCI;        // 0..15
+        const pct = (total / 15) * 100;         // 0..100
+        const pct1 = round1(pct);
+
+        ecoVal.textContent = `${sEco}/5`;
+        valVal.textContent = `${sVal}/5`;
+        ciVal.textContent  = `${sCI}/5`;
+
+        totalEl.textContent = `Totaal: ${total}/15`;
+        pctEl.textContent = `${pct1}%`;
+
+        const good = pct >= 80;
+
+        // kleur: <80% rood, anders groen
+        scorePanel.classList.toggle("good", good);
+        scorePanel.classList.toggle("bad", !good);
+
+        bar.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+        bar.style.background = good ? "var(--ok)" : "var(--bad)";
+
+        // Label-tekst (kort)
+        let lbl = good ? "Go / prioriteren" : "Te zwak (<80%) → bijsturen";
+        labelEl.textContent = `Label: ${lbl}`;
+
+        const n = (nameEl.value || "").trim();
+        const a = (actEl.value || "").trim();
+        caseEl.textContent = `Case: ${n ? n : "—"} • ${a ? a : "—"}`;
+      }
+
+      function reset(){
+        nameEl.value = "";
+        actEl.value = "";
+        eco.value = 0; val.value = 0; ci.value = 0;
+        compute();
+      }
+
+      function saveLocal(){
+        const payload = {
+          instelling: nameEl.value || "",
+          activiteit: actEl.value || "",
+          scoreEco: Number(eco.value || 0),
+          scoreVal: Number(val.value || 0),
+          scoreCI: Number(ci.value || 0),
+          savedAt: new Date().toISOString()
+        };
+        localStorage.setItem("forza_last_case", JSON.stringify(payload));
+        alert("Lokaal bewaard (in je browser).");
+      }
+
+      function loadLocal(){
+        const raw = localStorage.getItem("forza_last_case");
+        if(!raw){ alert("Geen lokaal opgeslagen case gevonden."); return; }
+        try{
+          const p = JSON.parse(raw);
+          nameEl.value = p.instelling || "";
+          actEl.value  = p.activiteit || "";
+          eco.value = String(p.scoreEco ?? 0);
+          val.value = String(p.scoreVal ?? 0);
+          ci.value  = String(p.scoreCI ?? 0);
+          compute();
+        } catch(e){
+          alert("Kon de opgeslagen case niet lezen.");
+        }
+      }
+
+      [nameEl, actEl, eco, val, ci].forEach(x => x.addEventListener("input", compute));
+      btnReset.addEventListener("click", reset);
+      btnSave.addEventListener("click", saveLocal);
+      btnLoad.addEventListener("click", loadLocal);
+
+      compute();
+    })();
+  </script>
 </body>
 </html>
