@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Altrio — Groepsarchitectuur & Administratieve Vertaling</title>
+  <style>
+    :root{
+      --bg0:#070b13; --bg1:#0b1220;
+      --panel:rgba(255,255,255,.06); --panel2:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92); --muted:rgba(255,255,255,.68);
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+      --r:18px;
+
+      --core:#22c55e;
+      --support:#60a5fa;
+      --growth:#34d399;
+      --trans:#f59e0b;
+      --zorgstart:#fb7185;
+      --triage:#a78bfa;
+      --compliance:#f87171;
+      --partners:#38bdf8;
+
+      --chipbg:rgba(255,255,255,.06);
+      --chipbd:rgba(255,255,255,.14);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1100px 600px at 12% 10%, rgba(96,165,250,.25), transparent 55%),
+        radial-gradient(900px 600px at 86% 12%, rgba(167,139,250,.24), transparent 55%),
+        radial-gradient(900px 700px at 50% 96%, rgba(34,197,94,.18), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 30%, var(--bg1) 100%);
+      min-height:100vh;
+      padding:28px;
+    }
+    .wrap{max-width: 1280px; margin:0 auto;}
+    header{
+      display:flex; gap:18px; align-items:flex-start; justify-content:space-between;
+      margin-bottom:16px;
+    }
+    .brand{display:flex; gap:14px; align-items:center;}
+    .logo{
+      width:46px;height:46px;border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
+        linear-gradient(135deg, rgba(34,197,94,.9), rgba(96,165,250,.85));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      flex:0 0 auto;
+    }
+    h1{margin:0; font-size:20px; line-height:1.15; letter-spacing:.2px;}
+    .subtitle{margin:4px 0 0 0; color:var(--muted); font-size:13.5px; max-width:880px; line-height:1.45;}
+    .pills{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+    .pill{
+      padding:10px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      font-size: 12.5px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 16px;
+      align-items:start;
+    }
+    @media (max-width: 1020px){
+      header{flex-direction:column; align-items:flex-start;}
+      .pills{justify-content:flex-start;}
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    .card{
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hd{
+      padding: 16px 16px 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      display:flex; align-items:flex-start; justify-content:space-between; gap: 12px;
+    }
+    .hd h2{margin:0; font-size:14px; letter-spacing:.2px;}
+    .hint{margin:0; color:var(--muted); font-size:12.5px; line-height:1.35;}
+    .body{padding:16px;}
+
+    .toolbar{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin: 0 0 12px 0;
+      align-items:center;
+    }
+    .btn{
+      cursor:pointer;
+      padding:8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      font-size: 12.5px;
+    }
+    .btn.active{
+      border-color: rgba(255,255,255,.28);
+      background: rgba(255,255,255,.10);
+    }
+    .search{
+      flex:1 1 220px;
+      display:flex; gap:8px; align-items:center;
+      padding:8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+    }
+    .search input{
+      width:100%;
+      border:none; outline:none;
+      background:transparent;
+      color: rgba(255,255,255,.92);
+      font-size: 12.5px;
+    }
+    .search input::placeholder{color: rgba(255,255,255,.55);}
+
+    .section{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+      padding: 14px;
+      margin-bottom: 12px;
+      position:relative;
+      overflow:hidden;
+    }
+    .section::before{
+      content:"";
+      position:absolute; inset:-40% -30% auto auto;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 58%);
+      transform: rotate(10deg);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .row{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+    .kicker{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: rgba(255,255,255,.88);
+      white-space:nowrap;
+    }
+    .dot{width:10px;height:10px;border-radius:50%; background: currentColor; opacity:.95; box-shadow: 0 0 0 3px rgba(255,255,255,.10);}
+    .title{margin:8px 0 0 0; font-size:16px; letter-spacing:.2px;}
+    .desc{margin:6px 0 0 0; color:var(--muted); font-size:13px; line-height:1.45; max-width: 82ch;}
+
+    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+    .chip{
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--chipbd);
+      background: var(--chipbg);
+      color: rgba(255,255,255,.86);
+      white-space:nowrap;
+    }
+
+    .accent-core{color:var(--core)}
+    .accent-support{color:var(--support)}
+    .accent-growth{color:var(--growth)}
+    .accent-trans{color:var(--trans)}
+    .accent-zorgstart{color:var(--zorgstart)}
+    .accent-triage{color:var(--triage)}
+    .accent-compliance{color:var(--compliance)}
+    .accent-partners{color:var(--partners)}
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top:12px;
+    }
+    @media (max-width: 760px){ .cards{grid-template-columns: 1fr;} }
+
+    .mini{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .mini h3{margin:0; font-size:13.5px; letter-spacing:.2px;}
+    .mini p{margin:6px 0 0 0; color:var(--muted); font-size:12.5px; line-height:1.35;}
+    .mini .meta{margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;}
+    .badge{
+      font-size:11.5px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.86);
+    }
+
+    .list{display:grid; gap:10px;}
+    .item{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+    }
+    .icon{
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+      font-size:14px;
+    }
+    .item h4{margin:0; font-size:13px;}
+    .item p{margin:4px 0 0 0; color:var(--muted); font-size:12.5px; line-height:1.35;}
+
+    pre{
+      margin:0;
+      padding: 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      overflow:auto;
+      color: rgba(255,255,255,.90);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height:1.45;
+    }
+
+    footer{
+      margin-top: 14px;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Altrio — Groepsarchitectuur & Administratieve Vertaling</h1>
+          <p class="subtitle">
+            Kern = <strong>thuisverpleging</strong>. Daaromheen businesslijnen (instroom/uitstroom/groei), een laag <strong>ecosysteempartners</strong>
+            voor community-waarde, en <strong>RIZIV & compliance</strong> als enabler. Alles is opvolgbaar via één uniform “Initiatief-record”.
+          </p>
+        </div>
+      </div>
+      <div class="pills">
+        <div class="pill">🧩 Pijlers (structuur)</div>
+        <div class="pill">🏷️ Labels (operationeel/innovatie/commercieel)</div>
+        <div class="pill">🤝 Ecosysteempartners (community-waarde)</div>
+        <div class="pill">✅ Compliance by design</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <section class="card">
+        <div class="hd">
+          <h2>Structuur (wat is primair) + Labels (wat is focus)</h2>
+          <p class="hint">Gebruik knoppen om te filteren op label. Zo toon je dat labels geen mappen hoeven te zijn.</p>
+        </div>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn active" data-filter="all">Alles</button>
+            <button class="btn" data-filter="Operationeel">Operationeel</button>
+            <button class="btn" data-filter="Innovatie">Innovatie</button>
+            <button class="btn" data-filter="Commercieel">Commercieel</button>
+            <button class="btn" data-filter="Community">Community</button>
+            <div class="search" title="Zoek in titel of beschrijving">
+              🔎 <input id="q" placeholder="Zoek: ‘Zorgstart’, ‘triage’, ‘partners’, …" />
+            </div>
+          </div>
+
+          <!-- CORE -->
+          <div class="section" data-tags="Operationeel">
+            <div class="row">
+              <div>
+                <div class="kicker"><span class="dot accent-core"></span> Kernactiviteit</div>
+                <h3 class="title">Thuisverpleging</h3>
+                <p class="desc">
+                  Fundament van de groep. De versterkende lijnen zorgen voor meer werkaanbod, schaal, continuïteit en ecosysteempositie.
+                </p>
+              </div>
+              <div class="chips">
+                <span class="chip">Operationeel</span>
+                <span class="chip">Kwaliteit</span>
+                <span class="chip">Schaalbaar</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUSINESS LINES -->
+          <div class="section" style="border-color: rgba(96,165,250,.26);" data-tags="Operationeel">
+            <div class="kicker"><span class="dot accent-support"></span> Versterkende activiteiten</div>
+            <h3 class="title">HAP-ondersteuning • WZC & Voorzieningenzorg</h3>
+            <p class="desc">Reguliere activiteiten die de kern versterken via samenwerking en stabiel(er) werkaanbod.</p>
+            <div class="chips">
+              <span class="chip">Operationeel</span>
+              <span class="chip">Partnership</span>
+            </div>
+          </div>
+
+          <div class="section" style="border-color: rgba(52,211,153,.26);" data-tags="Commercieel">
+            <div class="kicker"><span class="dot accent-growth"></span> Groeimotor</div>
+            <h3 class="title">Verpleegpraktijken aansluiten</h3>
+            <p class="desc">Businesslijn om praktijken te overtuigen aan te sluiten: groei in coverage, werkgebied en capaciteit.</p>
+            <div class="chips">
+              <span class="chip">Commercieel</span>
+              <span class="chip">Opschaling</span>
+            </div>
+          </div>
+
+          <div class="section" style="border-color: rgba(245,158,11,.26);" data-tags="Operationeel Innovatie">
+            <div class="kicker"><span class="dot accent-trans"></span> Businesslijn</div>
+            <h3 class="title">Transmurale Zorg (ziekenhuis ↔ thuiszorg)</h3>
+            <p class="desc">
+              Zorgpaden, zorgtrajecten, OPAT… In transitie: <strong>ontslagmanagement</strong> wordt belangrijker als hefboom over ziekenhuizen heen.
+            </p>
+            <div class="chips">
+              <span class="chip">Innovatie</span>
+              <span class="chip">Operationeel</span>
+              <span class="chip">Ecosysteem</span>
+            </div>
+          </div>
+
+          <div class="section" style="border-color: rgba(251,113,133,.28); background: linear-gradient(135deg, rgba(251,113,133,.10), rgba(255,255,255,.04));" data-tags="Innovatie Commercieel">
+            <div class="kicker"><span class="dot accent-zorgstart"></span> Spin-off / Disruptieve businesslijn</div>
+            <h3 class="title">Zorgstart — Ontslagmanagement + Matchingplatform</h3>
+            <p class="desc">
+              Regie van “ontslag → veilig thuis”. Matching van zorgvraag en zorgaanbod. Ambitie: coördinerende/regisserende speler (“Uber van de zorg”).
+            </p>
+            <div class="chips">
+              <span class="chip">Innovatie</span>
+              <span class="chip">Commercieel</span>
+              <span class="chip">Platform</span>
+            </div>
+
+            <div class="cards" id="zorgstart-subcards"></div>
+          </div>
+
+          <div class="section" style="border-color: rgba(167,139,250,.26);" data-tags="Innovatie">
+            <div class="kicker"><span class="dot accent-triage"></span> Instroom-hefboom</div>
+            <h3 class="title">Wachtposten & Triage</h3>
+            <p class="desc">
+              Impact op instroom (triage en consultvoorbereiding). Complementair aan Zorgstart (uitstroom).
+            </p>
+            <div class="chips">
+              <span class="chip">Innovatie</span>
+              <span class="chip">AI-ondersteund</span>
+            </div>
+          </div>
+
+          <!-- ECOSYSTEM PARTNERS -->
+          <div class="section" style="border-color: rgba(56,189,248,.28);" data-tags="Community Commercieel">
+            <div class="kicker"><span class="dot accent-partners"></span> Ecosysteemlaag</div>
+            <h3 class="title">Partners & Community-voordelen</h3>
+            <p class="desc">
+              Commerciële en strategische spelers die het eco-systeem leuker en aantrekkelijker maken: iedereen in de community haalt er voordeel uit.
+            </p>
+            <div class="chips">
+              <span class="chip">Community</span>
+              <span class="chip">Commercieel</span>
+              <span class="chip">Value add</span>
+            </div>
+
+            <div class="cards" id="partner-cards"></div>
+          </div>
+
+          <!-- GOVERNANCE / COMPLIANCE -->
+          <div class="section" style="border-color: rgba(248,113,113,.28);" data-tags="Operationeel">
+            <div class="kicker"><span class="dot accent-compliance"></span> Enabler / randvoorwaarde</div>
+            <h3 class="title">RIZIV & Compliance-by-design</h3>
+            <p class="desc">
+              Nomenclatuur, mandaten, gegevensdeling, rollen en audit trails proactief opvolgen zodat alle lijnen veilig kunnen schalen.
+            </p>
+            <div class="chips">
+              <span class="chip">Governance</span>
+              <span class="chip">Risk</span>
+              <span class="chip">Kwaliteit</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <aside class="card">
+        <div class="hd">
+          <h2>Administratieve vertaling (opvolgmodel)</h2>
+          <p class="hint">Eén uniforme “Initiatiefkaart” in Odoo + links naar Teams & OneNote.</p>
+        </div>
+        <div class="body">
+          <div class="list">
+            <div class="item">
+              <div class="icon">A</div>
+              <div>
+                <h4>Laag A — Groepsarchitectuur</h4>
+                <p><strong>Businesslijnen</strong> (core + instroom/uitstroom/groei) + <strong>Ecosysteempartners</strong> + <strong>Governance</strong>.</p>
+              </div>
+            </div>
+            <div class="item">
+              <div class="icon">B</div>
+              <div>
+                <h4>Laag B — Entiteiten (accounts)</h4>
+                <p>ZAS, VITAZ, WZC X, Praktijk Y… + regio/provincie. Koppeling aan initiatieven en partners.</p>
+              </div>
+            </div>
+            <div class="item">
+              <div class="icon">C</div>
+              <div>
+                <h4>Laag C — Initiatieven</h4>
+                <p>Afgebakende activiteiten (wat jullie “project” noemen): doel, owner, status, KPI’s, compliance-check.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <h3 style="margin:0 0 8px 0; font-size:13.5px; letter-spacing:.2px;">Template “Initiatiefkaart” (kopieerbaar)</h3>
+          <pre id="initiativeTemplate"></pre>
+
+          <div style="height:12px"></div>
+
+          <h3 style="margin:0 0 8px 0; font-size:13.5px; letter-spacing:.2px;">Voorbeeld-ID’s (consistent en filterbaar)</h3>
+          <pre>
+TM-ANT-2026-003  (Transmuraal • Antwerpen • 2026 • #003)
+ZS-OV-2026-001  (Zorgstart • Oost-Vlaanderen • 2026 • #001)
+WP-LIM-2026-002 (Wachtpost • Limburg • 2026 • #002)
+PAR-NAT-2026-004 (Partner • Nationaal • 2026 • #004)</pre>
+        </div>
+      </aside>
+    </div>
+
+    <footer>Demo HTML • Printvriendelijk (Ctrl+P) • Alles staat in één bestand (HTML + CSS + JS).</footer>
+  </div>
+
+  <script>
+    // ----------------------------
+    // DATA (pas gerust aan)
+    // ----------------------------
+    const zorgstartSub = [
+      {
+        title: "Ontslagflow (over ziekenhuizen heen)",
+        desc: "Herbruikbare bouwstenen: intake, plan, coördinatie, opvolging, evaluatie.",
+        tags: ["Innovatie", "Operationeel"]
+      },
+      {
+        title: "Matchingplatform (zorgvraag ↔ zorgaanbod)",
+        desc: "Koppelt trajecten aan partners, zorgverleners, voorzieningen en capaciteit.",
+        tags: ["Platform", "Commercieel"]
+      }
+    ];
+
+    const partners = [
+      {
+        title: "Technologiepartners",
+        desc: "EPD/triage/portaal/AI: versnelt schaalbaarheid en gebruikerservaring.",
+        tags: ["Community", "Commercieel"]
+      },
+      {
+        title: "Voordelen & deals voor leden",
+        desc: "Concrete voordelen voor iedereen in de community (tools, mobiliteit, opleidingen…).",
+        tags: ["Community"]
+      },
+      {
+        title: "Opleidings- & kennispartners",
+        desc: "Bijscholing, certificaten, community events, ‘best practices’ en innovatieversnelling.",
+        tags: ["Community", "Operationeel"]
+      },
+      {
+        title: "Strategische commerciële allianties",
+        desc: "Partners die mee bouwen aan bereik, instroom/uitstroom, en duurzame groei.",
+        tags: ["Commercieel"]
+      }
+    ];
+
+    const initiativeTemplate = {
+      id: "ZS-OV-2026-001",
+      naam: "Zorgstart — Ontslagflow VITAZ",
+      laagA_businesslijn: "Zorgstart (Ontslagmanagement)",
+      laagA_type: "Businesslijn | Partner | Governance",
+      entiteiten: ["VITAZ Sint-Niklaas", "Altrio Thuisverpleging"],
+      regio_provincie: "Oost-Vlaanderen",
+      doel_1_zin: "Ontslag → veilig thuis regisseren met meetbare impact op doorlooptijd en kwaliteit.",
+      scope_in: ["intake", "zorgplan", "matching", "opvolging"],
+      scope_out: ["klinische beslissingen arts", "ziekenhuis interne processen buiten ontslag"],
+      labels: ["Innovatie", "Commercieel"], // analysetags, geen mappen
+      owner: "Naam eigenaar",
+      co_owners: ["Naam", "Naam"],
+      status: "Intake | Actief | On hold | Afgerond",
+      timing: { start: "2026-02-01", einde: "2026-06-30" },
+      kpis: [
+        "Doorlooptijd ontslag (dagen)",
+        "Succesvolle matching binnen 24u (%)",
+        "Heropnames binnen 30 dagen (%)"
+      ],
+      compliance_check: {
+        RIZIV: "OK / NA te bekijken",
+        AVG: "OK / DPIA nodig",
+        mandaten: "OK / ontbreekt",
+        audit_trail: "OK / ontbreekt"
+      },
+      beslissingen_log: [
+        { datum: "2026-02-10", beslissing: "Go voor piloot in 2 afdelingen", door: "..." }
+      ],
+      links: {
+        teams_map: "plak hier link naar SharePoint/Teams map",
+        onenote_pagina: "plak hier link naar OneNote pagina",
+        odoo_record: "plak hier link naar Odoo"
+      }
+    };
+
+    // ----------------------------
+    // RENDER HELPERS
+    // ----------------------------
+    function cardHTML(x){
+      const tags = (x.tags || []).map(t => `<span class="badge">${escapeHtml(t)}</span>`).join("");
+      return `
+        <div class="mini">
+          <h3>${escapeHtml(x.title)}</h3>
+          <p>${escapeHtml(x.desc)}</p>
+          <div class="meta">${tags}</div>
+        </div>`;
+    }
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    function render(){
+      document.getElementById("zorgstart-subcards").innerHTML = zorgstartSub.map(cardHTML).join("");
+      document.getElementById("partner-cards").innerHTML = partners.map(cardHTML).join("");
+      document.getElementById("initiativeTemplate").textContent = JSON.stringify(initiativeTemplate, null, 2);
+    }
+
+    // ----------------------------
+    // FILTERS
+    // ----------------------------
+    function applyFilter(tag, query){
+      const sections = document.querySelectorAll(".section");
+      const q = (query || "").trim().toLowerCase();
+
+      sections.forEach(sec => {
+        const tags = (sec.getAttribute("data-tags") || "");
+        const hay = (sec.innerText || "").toLowerCase();
+        const tagOk = (tag === "all") ? true : tags.split(/\s+/).includes(tag);
+        const qOk = (!q) ? true : hay.includes(q);
+        sec.style.display = (tagOk && qOk) ? "" : "none";
+      });
+    }
+
+    function setActive(btn){
+      document.querySelectorAll(".btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    }
+
+    render();
+    applyFilter("all","");
+
+    document.querySelectorAll(".btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setActive(btn);
+        applyFilter(btn.dataset.filter, document.getElementById("q").value);
+      });
+    });
+
+    document.getElementById("q").addEventListener("input", (e) => {
+      const active = document.querySelector(".btn.active")?.dataset?.filter || "all";
+      applyFilter(active, e.target.value);
+    });
+  </script>
+</body>
+</html>
