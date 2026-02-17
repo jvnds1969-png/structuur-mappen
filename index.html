@@ -1,396 +1,628 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Altrio — Pijlers & Mappenstructuur</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Projecten — één-pagina structuur (Kern + Backoffice, Vlaanderen + provincies)</title>
   <style>
     :root{
-      --bg0:#070b13; --bg1:#0b1220;
-      --panel:rgba(255,255,255,.06);
-      --line:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.68);
-      --shadow:0 18px 60px rgba(0,0,0,.35);
-      --r:18px;
-
-      --core:#22c55e;
-      --support:#60a5fa;
-      --wzc:#93c5fd;
-      --growth:#34d399;
-      --trans:#f59e0b;
-      --zorgstart:#fb7185;
-      --triage:#a78bfa;
-      --flex:#38bdf8;
-      --policy:#f87171;
-
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --bg:#f7f9fc;
+      --card:#ffffff;
+      --ink:#0f2436;
+      --muted:#5b6b7a;
+      --line:#d9e3ef;
+      --accent:#1459a6;
+      --accent2:#0ea5a4;
+      --soft:#eef5ff;
+      --soft2:#ecfeff;
+      --shadow: 0 10px 24px rgba(15,36,54,.08);
+      --radius: 16px;
+      --radius2: 12px;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
-      background:
-        radial-gradient(1100px 600px at 12% 10%, rgba(96,165,250,.25), transparent 55%),
-        radial-gradient(900px 600px at 86% 12%, rgba(167,139,250,.24), transparent 55%),
-        radial-gradient(900px 700px at 50% 96%, rgba(34,197,94,.18), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1) 30%, var(--bg1) 100%);
-      min-height:100vh;
-      padding:28px;
+      color:var(--ink);
+      background: radial-gradient(1200px 600px at 15% 0%, #e8f1ff 0%, rgba(232,241,255,0) 55%),
+                  radial-gradient(900px 500px at 85% 10%, #e6fffb 0%, rgba(230,255,251,0) 60%),
+                  var(--bg);
+    }
+    .page{
+      max-width: 1200px;
+      margin: 28px auto 60px;
+      padding: 0 18px;
+    }
+    .header{
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom: 16px;
+    }
+    .title{
+      flex: 1 1 520px;
+      background: linear-gradient(180deg, rgba(20,89,166,.10), rgba(20,89,166,.04));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 18px 14px;
+      box-shadow: var(--shadow);
+    }
+    .title h1{
+      font-size: 20px;
+      margin:0 0 6px;
+      letter-spacing:.2px;
+    }
+    .title p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.35;
+      font-size: 13.5px;
+    }
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .chip{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+    }
+    .chip.accent{
+      border-color: rgba(20,89,166,.25);
+      background: rgba(20,89,166,.08);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .chip.accent2{
+      border-color: rgba(14,165,164,.30);
+      background: rgba(14,165,164,.10);
+      color: #0b6b6a;
+      font-weight: 600;
     }
 
-    .wrap{max-width: 1320px; margin:0 auto;}
-    header{
-      display:flex; gap:18px; align-items:flex-start; justify-content:space-between;
-      margin-bottom:16px;
+    .meta{
+      flex: 0 1 320px;
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 16px 12px;
+      box-shadow: var(--shadow);
     }
-    .brand{display:flex; gap:14px; align-items:center;}
-    .logo{
-      width:46px;height:46px;border-radius:14px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
-        linear-gradient(135deg, rgba(34,197,94,.9), rgba(96,165,250,.85));
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      flex:0 0 auto;
+    .meta h2{
+      margin:0 0 8px;
+      font-size: 14px;
     }
-    h1{margin:0; font-size:20px; line-height:1.15; letter-spacing:.2px;}
-    .subtitle{margin:4px 0 0 0; color:var(--muted); font-size:13.5px; max-width:1000px; line-height:1.45;}
+    .meta ul{
+      margin:0;
+      padding-left: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .meta li{ margin: 4px 0; }
 
-    .pills{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
-    .pill{
-      padding:10px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.86);
-      font-size: 12.5px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.18);
-      user-select:none;
-      white-space:nowrap;
-    }
-
-    .grid{
+    .rail{
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 16px;
-      align-items:start;
-    }
-    @media (max-width: 1100px){
-      header{flex-direction:column; align-items:flex-start;}
-      .pills{justify-content:flex-start;}
-      .grid{grid-template-columns: 1fr;}
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
     }
 
-    .card{
-      background: var(--panel);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: var(--r);
+    .box{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .hd{
-      padding: 16px 16px 10px 16px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      display:flex; align-items:flex-start; justify-content:space-between; gap: 12px;
-    }
-    .hd h2{margin:0; font-size:14px; letter-spacing:.2px;}
-    .hint{margin:0; color:var(--muted); font-size:12.5px; line-height:1.35;}
-    .body{padding:16px;}
-
-    .legend{
-      display:flex; flex-wrap:wrap; gap:8px;
-      margin: 0 0 12px 0;
+    .box-head{
+      display:flex;
       align-items:center;
+      justify-content:space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(20,89,166,.10), rgba(14,165,164,.08));
     }
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      font-size:12px;
-      color: rgba(255,255,255,.86);
-      white-space:nowrap;
+    .box-head .label{
+      font-weight: 800;
+      letter-spacing: .2px;
     }
-    .dot{
-      width:10px;height:10px;border-radius:50%;
-      background: currentColor;
-      box-shadow: 0 0 0 3px rgba(255,255,255,.10);
-      opacity:.95;
+    .box-head .small{
+      color: var(--muted);
+      font-size: 12.5px;
     }
-    .c-core{color:var(--core)}
-    .c-support{color:var(--support)}
-    .c-wzc{color:var(--wzc)}
-    .c-growth{color:var(--growth)}
-    .c-trans{color:var(--trans)}
-    .c-zorgstart{color:var(--zorgstart)}
-    .c-triage{color:var(--triage)}
-    .c-flex{color:var(--flex)}
-    .c-policy{color:var(--policy)}
 
-    .pillars{
+    .groups{
+      padding: 14px;
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
       gap: 12px;
-      align-items:stretch;
     }
-    @media (max-width: 980px){ .pillars{grid-template-columns: 1fr 1fr;} }
-    @media (max-width: 620px){ .pillars{grid-template-columns: 1fr;} }
+    @media (max-width: 1100px){
+      .groups{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+    }
+    @media (max-width: 620px){
+      .groups{ grid-template-columns: 1fr; }
+    }
 
-    .pillar{
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      padding: 14px;
-      position:relative;
+    .group{
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      background: #fff;
       overflow:hidden;
-      min-height: 210px;
     }
-    .pillar::before{
-      content:"";
-      position:absolute;
-      inset:-40% -30% auto auto;
-      width: 240px; height: 240px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 58%);
-      transform: rotate(10deg);
-      opacity:.55;
-      pointer-events:none;
+    .group .ghead{
+      padding: 10px 12px;
+      background: var(--soft);
+      border-bottom: 1px solid var(--line);
     }
-    .pillar h3{margin:0; font-size:14px; letter-spacing:.2px;}
-    .pillar p{margin:6px 0 10px 0; color:var(--muted); font-size:12.8px; line-height:1.35;}
+    .group .ghead .code{
+      font-weight: 900;
+      color: var(--accent);
+      font-size: 12.5px;
+    }
+    .group .ghead .name{
+      margin-top: 2px;
+      font-weight: 800;
+      font-size: 13.5px;
+      line-height: 1.2;
+    }
+    .group .ghead .sub{
+      margin-top: 4px;
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
 
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px;
+    .group .body{
+      padding: 10px 12px 12px;
+      display:grid;
+      gap: 10px;
+    }
+    .pillrow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      font-size: 12px;
+      padding: 6px 10px;
       border-radius: 999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      font-size:12px;
-      color: rgba(255,255,255,.86);
+      border: 1px solid rgba(20,89,166,.22);
+      background: rgba(20,89,166,.06);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .pill.bo{
+      border-color: rgba(14,165,164,.26);
+      background: rgba(14,165,164,.08);
+      color: #0b6b6a;
     }
 
-    pre.tree{
-      margin: 10px 0 0 0;
-      padding: 12px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      overflow:auto;
-      color: rgba(255,255,255,.90);
-      font-family: var(--mono);
+    .geo{
+      border:1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 10px 8px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.00), rgba(15,36,54,0.02));
+    }
+    .geo .geotitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .geo .geotitle strong{
+      font-size: 12.5px;
+    }
+    .geo .geotitle span{
       font-size: 12px;
-      line-height: 1.45;
-      white-space: pre;
+      color: var(--muted);
     }
-
-    .rule{
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      padding: 14px;
-      margin-bottom: 12px;
+    .geo .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 6px;
     }
-    .rule h3{margin:0; font-size:13.5px;}
-    .rule p{margin:6px 0 0 0; color:var(--muted); font-size:12.8px; line-height:1.4;}
-    .kbd{
-      font-family: var(--mono);
-      font-size:12px;
-      padding:2px 6px;
-      border-radius:8px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.90);
-    }
-
-    footer{
-      margin-top: 14px;
-      color: rgba(255,255,255,.55);
+    .geo .item{
       font-size: 12px;
+      border:1px solid var(--line);
+      border-radius: 10px;
+      padding: 6px 8px;
+      background:#fff;
+      color: var(--muted);
       text-align:center;
+      white-space: nowrap;
+    }
+    .geo .item.vl{
+      color: var(--ink);
+      font-weight: 800;
+      border-color: rgba(15,36,54,.14);
+      background: rgba(15,36,54,.04);
     }
 
+    .footer{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+    }
+    @media (max-width: 900px){
+      .footer{ grid-template-columns: 1fr; }
+    }
+
+    .note{
+      background: #fff;
+      border:1px dashed rgba(15,36,54,.25);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      color: var(--muted);
+      line-height: 1.45;
+      box-shadow: 0 8px 18px rgba(15,36,54,.06);
+      font-size: 13px;
+    }
+    .note strong{ color: var(--ink); }
+
+    .outside{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+    }
+    .outside h3{
+      margin:0 0 8px;
+      font-size: 13.5px;
+    }
+    .outside .tags{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .tag{
+      border:1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      background: #fff;
+    }
+    .tag.legal{
+      border-color: rgba(239,68,68,.28);
+      background: rgba(239,68,68,.08);
+      color: #7a1b1b;
+      font-weight: 700;
+    }
+    .tag.hr{
+      border-color: rgba(168,85,247,.28);
+      background: rgba(168,85,247,.09);
+      color: #4c1d95;
+      font-weight: 700;
+    }
+    .tag.ops{
+      border-color: rgba(234,179,8,.28);
+      background: rgba(234,179,8,.12);
+      color: #7a5a00;
+      font-weight: 700;
+    }
+    .tag.it{
+      border-color: rgba(59,130,246,.28);
+      background: rgba(59,130,246,.10);
+      color: #0b3a7a;
+      font-weight: 700;
+    }
+
+    .printbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      margin: 10px 0 0;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      cursor:pointer;
+      color: var(--ink);
+      box-shadow: 0 6px 14px rgba(15,36,54,.06);
+    }
+    .btn:hover{ border-color: rgba(20,89,166,.35); }
     @media print{
-      body{ background:#fff; color:#111; padding:0; }
-      .card{ box-shadow:none; background:#fff; border:1px solid #ddd; }
-      .pill{ display:none; }
-      .subtitle,.hint,.pillar p,.rule p{ color:#333; }
-      pre.tree{ background:#fff; color:#111; border:1px solid #ddd; }
-      footer{ color:#666; }
+      body{ background:#fff; }
+      .btn, .printbar{ display:none !important; }
+      .page{ margin:0; }
+      .box, .title, .meta{ box-shadow:none; }
     }
   </style>
 </head>
-
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Altrio — Pijlers & Mappenstructuur (visueel)</h1>
-          <p class="subtitle">
-            Uniform stramien per pijler: <strong>Pijler → Provincie/Nationaal → Entiteit → Initiatief</strong>.
-            Gebruikers kiezen zelf hun submappen binnen een initiatief.
-            <strong>RIZIV/Beleid</strong> is een extra pijler zonder provinciale indeling (alleen “Nationaal”).
-          </p>
+  <div class="page">
+    <div class="header">
+      <section class="title">
+        <h1>Projecten — stabiele structuur (één pagina)</h1>
+        <p>
+          Elke <strong>projectgroep</strong> heeft twee vaste omgevingen: <strong>Kern</strong> (inhoudelijk) en
+          <strong>Backoffice</strong> (ondersteunend). Beide worden identiek ingedeeld in <strong>Vlaanderen + provincies</strong>.
+        </p>
+        <div class="chips">
+          <span class="chip accent">Kern</span>
+          <span class="chip accent2">Backoffice</span>
+          <span class="chip">Vlaanderen + provincies</span>
+          <span class="chip">Teams & Odoo-consistent</span>
         </div>
-      </div>
-      <div class="pills">
-        <div class="pill">✅ 8 + 1 pijlers</div>
-        <div class="pill">📁 1 logica</div>
-        <div class="pill">🧩 Entiteit = account</div>
-        <div class="pill">🧷 Initiatief = dossier</div>
-      </div>
-    </header>
-
-    <div class="grid">
-      <!-- LEFT -->
-      <section class="card">
-        <div class="hd">
-          <h2>Alle pijlers met voorbeeld-structuur</h2>
-          <p class="hint">Geen verplichte submappen: de structuur stopt op “Initiatief”.</p>
-        </div>
-        <div class="body">
-
-          <div class="legend">
-            <span class="chip"><span class="dot c-core"></span> Core</span>
-            <span class="chip"><span class="dot c-support"></span> Versterkend</span>
-            <span class="chip"><span class="dot c-growth"></span> Groei</span>
-            <span class="chip"><span class="dot c-trans"></span> Ziekenhuis</span>
-            <span class="chip"><span class="dot c-zorgstart"></span> Platform/uitstroom</span>
-            <span class="chip"><span class="dot c-triage"></span> Instroom</span>
-            <span class="chip"><span class="dot c-flex"></span> Matching</span>
-            <span class="chip"><span class="dot c-policy"></span> RIZIV/Beleid</span>
-          </div>
-
-          <div class="pillars">
-
-            <div class="pillar" style="border-color: rgba(34,197,94,.30); background: rgba(34,197,94,.10);">
-              <div class="badge"><span class="dot c-core"></span> 1) Thuisverpleging (CORE)</div>
-              <p>Interne werking per provincie/teams.</p>
-              <pre class="tree">01_Thuisverpleging_CORE
-└─ Antwerpen
-   └─ Team Kempen
-      └─ Optimalisatie ochtendrondes</pre>
-            </div>
-
-            <div class="pillar">
-              <div class="badge"><span class="dot c-support"></span> 2) HAP & Eerstelijnsondersteuning</div>
-              <p>HAP’s en praktijken als entiteiten (accounts).</p>
-              <pre class="tree">02_HAP_Eerstelijn
-└─ Oost-Vlaanderen
-   └─ HAP Waasland
-      └─ Nurse-led consult</pre>
-            </div>
-
-            <div class="pillar">
-              <div class="badge"><span class="dot c-wzc"></span> 3) WZC & Voorzieningenzorg</div>
-              <p>WZC/voorzieningen als entiteiten (accounts).</p>
-              <pre class="tree">03_WZC_Voorzieningen
-└─ West-Vlaanderen
-   └─ WZC De Linde
-      └─ Wondzorgafspraken</pre>
-            </div>
-
-            <div class="pillar">
-              <div class="badge"><span class="dot c-growth"></span> 4) Verpleegpraktijken (Groei)</div>
-              <p>Praktijken als entiteiten: aansluiten/overname/integratie.</p>
-              <pre class="tree">04_Verpleegpraktijken_Groei
-└─ Antwerpen
-   └─ Praktijk Janssens (Turnhout)
-      └─ Aansluitingsdossier</pre>
-            </div>
-
-            <div class="pillar">
-              <div class="badge"><span class="dot c-trans"></span> 5) Transmurale Zorg</div>
-              <p>Ziekenhuizen als entiteiten; meerdere initiatieven per ziekenhuis.</p>
-              <pre class="tree">05_Transmurale_Zorg
-└─ Antwerpen
-   └─ ZAS Antwerpen
-      └─ Nazorg heupprothese</pre>
-            </div>
-
-            <div class="pillar" style="border-color: rgba(251,113,133,.28); background: rgba(251,113,133,.08);">
-              <div class="badge"><span class="dot c-zorgstart"></span> 6) Zorgstart</div>
-              <p>Platform + lokale implementaties. Vaak ook “Nationaal”.</p>
-              <pre class="tree">06_Zorgstart
-└─ Nationaal
-   └─ Platformontwikkeling
-      └─ Matchingflow v1</pre>
-            </div>
-
-            <div class="pillar">
-              <div class="badge"><span class="dot c-triage"></span> 7) Wachtposten & Triage</div>
-              <p>Wachtposten als entiteiten; per wachtpost 1+ initiatieven.</p>
-              <pre class="tree">07_Wachtposten_Triage
-└─ Limburg
-   └─ Wachtpost Geel
-      └─ Triage implementatie</pre>
-            </div>
-
-            <div class="pillar">
-              <div class="badge"><span class="dot c-flex"></span> 8) Flexizorg</div>
-              <p>Platform + accounts (instellingen/ziekenhuizen) per provincie/nationaal.</p>
-              <pre class="tree">08_Flexizorg
-└─ Nationaal
-   └─ Platformontwikkeling
-      └─ MVP roadmap</pre>
-            </div>
-
-            <div class="pillar" style="border-color: rgba(248,113,113,.30); background: rgba(248,113,113,.08);">
-              <div class="badge"><span class="dot c-policy"></span> 9) RIZIV / Beleid (nationaal)</div>
-              <p>Geen provincies. Dit is bovenbouw: wetgeving, nomenclatuur, mandaten, audit, richtlijnen.</p>
-              <pre class="tree">09_RIZIV_Beleid
-└─ Nationaal
-   ├─ Nomenclatuur & interpretaties
-   ├─ Mandaten & toestemmingen
-   ├─ AVG / GDPR
-   ├─ Audit & controles
-   └─ Richtlijnen & templates</pre>
-            </div>
-
-          </div>
+        <div class="printbar">
+          <button class="btn" onclick="window.print()">Print / PDF</button>
         </div>
       </section>
 
-      <!-- RIGHT -->
-      <aside class="card">
-        <div class="hd">
-          <h2>Spelregels (zodat het werkt)</h2>
-          <p class="hint">Kort en duidelijk — zonder verplichte submappen.</p>
-        </div>
-        <div class="body">
-          <div class="rule">
-            <h3>Regel 1 — Eén primaire pijler</h3>
-            <p>Elk initiatief hoort onder <strong>exact één</strong> pijler. Je mag linken, maar niet dubbel klasseren.</p>
-          </div>
-
-          <div class="rule">
-            <h3>Regel 2 — Entiteit is je “account”</h3>
-            <p>Ziekenhuis/Praktijk/WZC/Partner heeft z’n eigen map. Initiatieven hangen daaronder.</p>
-          </div>
-
-          <div class="rule">
-            <h3>Regel 3 — Nationaal is een bewuste keuze</h3>
-            <p>Gebruik <span class="kbd">Nationaal</span> voor platformen, templates of initiatieven die provincie-overstijgend zijn.</p>
-          </div>
-
-          <div class="rule">
-            <h3>Regel 4 — RIZIV/Beleid is aparte pijler</h3>
-            <p>Zoals jij wil: geen provincies, enkel <span class="kbd">Nationaal</span> met subdomeinen.</p>
-          </div>
-
-          <div class="rule">
-            <h3>Regel 5 — Vrijheid binnen initiatief</h3>
-            <p>Teams mogen binnen een initiatief zelf mappen maken (bv. “Afspraken”, “Data”, “Comms”), zolang de bovenliggende structuur klopt.</p>
-          </div>
-        </div>
+      <aside class="meta">
+        <h2>Leesregels</h2>
+        <ul>
+          <li><strong>Projecten</strong> is één container met 8 vaste projectgroepen.</li>
+          <li>Per projectgroep: <strong>Kern</strong> en <strong>Backoffice</strong>.</li>
+          <li>Per omgeving: <strong>Vlaanderen</strong> + 5 provincies.</li>
+        </ul>
       </aside>
     </div>
 
-    <footer>Alles in één HTML. Printvriendelijk (Ctrl+P). Pas voorbeelden gerust aan.</footer>
+    <section class="box" aria-label="Projectgroepen">
+      <div class="box-head">
+        <div class="label">8 Projectgroepen (vaste ruggengraat)</div>
+        <div class="small">Iedere groep: Kern + Backoffice → Vlaanderen + provincies</div>
+      </div>
+
+      <div class="groups">
+        <!-- 01 -->
+        <article class="group">
+          <div class="ghead">
+            <div class="code">01</div>
+            <div class="name">Verpleegpraktijken</div>
+          </div>
+          <div class="body">
+            <div class="pillrow">
+              <span class="pill">Kern</span>
+              <span class="pill bo">Backoffice</span>
+            </div>
+            <div class="geo">
+              <div class="geotitle">
+                <strong>Geografie</strong><span>identiek</span>
+              </div>
+              <div class="grid">
+                <div class="item vl">Vlaanderen</div>
+                <div class="item">Antwerpen</div>
+                <div class="item">Oost-Vl</div>
+                <div class="item">West-Vl</div>
+                <div class="item">Vlaams-Br</div>
+                <div class="item">Limburg</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 02 -->
+        <article class="group">
+          <div class="ghead">
+            <div class="code">02</div>
+            <div class="name">Voorzieningen</div>
+            <div class="sub">WZC · VAPH · …</div>
+          </div>
+          <div class="body">
+            <div class="pillrow">
+              <span class="pill">Kern</span>
+              <span class="pill bo">Backoffice</span>
+            </div>
+            <div class="geo">
+              <div class="geotitle">
+                <strong>Geografie</strong><span>identiek</span>
+              </div>
+              <div class="grid">
+                <div class="item vl">Vlaanderen</div>
+                <div class="item">Antwerpen</div>
+                <div class="item">Oost-Vl</div>
+                <div class="item">West-Vl</div>
+                <div class="item">Vlaams-Br</div>
+                <div class="item">Limburg</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 03 -->
+        <article class="group">
+          <div class="ghead">
+            <div class="code">03</div>
+            <div class="name">Transmurale Zorg</div>
+            <div class="sub">RAZ · UZ · LMC · …</div>
+          </div>
+          <div class="body">
+            <div class="pillrow">
+              <span class="pill">Kern</span>
+              <span class="pill bo">Backoffice</span>
+            </div>
+            <div class="geo">
+              <div class="geotitle">
+                <strong>Geografie</strong><span>identiek</span>
+              </div>
+              <div class="grid">
+                <div class="item vl">Vlaanderen</div>
+                <div class="item">Antwerpen</div>
+                <div class="item">Oost-Vl</div>
+                <div class="item">West-Vl</div>
+                <div class="item">Vlaams-Br</div>
+                <div class="item">Limburg</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 04 -->
+        <article class="group">
+          <div class="ghead">
+            <div class="code">04</div>
+            <div class="name">Eerstelijn</div>
+            <div class="sub">HAP · Wachtpost · Labo · WGC · Palliatief · …</div>
+          </div>
+          <div class="body">
+            <div class="pillrow">
+              <span class="pill">Kern</span>
+              <span class="pill bo">Backoffice</span>
+            </div>
+            <div class="geo">
+              <div class="geotitle">
+                <strong>Geografie</strong><span>identiek</span>
+              </div>
+              <div class="grid">
+                <div class="item vl">Vlaanderen</div>
+                <div class="item">Antwerpen</div>
+                <div class="item">Oost-Vl</div>
+                <div class="item">West-Vl</div>
+                <div class="item">Vlaams-Br</div>
+                <div class="item">Limburg</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 05 -->
+        <article class="group">
+          <div class="ghead">
+            <div class="code">05</div>
+            <div class="name">Ontslagmanagement</div>
+            <div class="sub">Zorgstart · Flexizorg</div>
+          </div>
+          <div class="body">
+            <div class="pillrow">
+              <span class="pill">Kern</span>
+              <span class="pill bo">Backoffice</span>
+            </div>
+            <div class="geo">
+              <div class="geotitle">
+                <strong>Geografie</strong><span>identiek</span>
+              </div>
+              <div class="grid">
+                <div class="item vl">Vlaanderen</div>
+                <div class="item">Antwerpen</div>
+                <div class="item">Oost-Vl</div>
+                <div class="item">West-Vl</div>
+                <div class="item">Vlaams-Br</div>
+                <div class="item">Limburg</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 06 -->
+        <article class="group">
+          <div class="ghead">
+            <div class="code">06</div>
+            <div class="name">Commerciële partners</div>
+          </div>
+          <div class="body">
+            <div class="pillrow">
+              <span class="pill">Kern</span>
+              <span class="pill bo">Backoffice</span>
+            </div>
+            <div class="geo">
+              <div class="geotitle">
+                <strong>Geografie</strong><span>identiek</span>
+              </div>
+              <div class="grid">
+                <div class="item vl">Vlaanderen</div>
+                <div class="item">Antwerpen</div>
+                <div class="item">Oost-Vl</div>
+                <div class="item">West-Vl</div>
+                <div class="item">Vlaams-Br</div>
+                <div class="item">Limburg</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 07 -->
+        <article class="group">
+          <div class="ghead">
+            <div class="code">07</div>
+            <div class="name">Clinical Trials</div>
+          </div>
+          <div class="body">
+            <div class="pillrow">
+              <span class="pill">Kern</span>
+              <span class="pill bo">Backoffice</span>
+            </div>
+            <div class="geo">
+              <div class="geotitle">
+                <strong>Geografie</strong><span>identiek</span>
+              </div>
+              <div class="grid">
+                <div class="item vl">Vlaanderen</div>
+                <div class="item">Antwerpen</div>
+                <div class="item">Oost-Vl</div>
+                <div class="item">West-Vl</div>
+                <div class="item">Vlaams-Br</div>
+                <div class="item">Limburg</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 08 -->
+        <article class="group">
+          <div class="ghead">
+            <div class="code">08</div>
+            <div class="name">Onderwijs</div>
+          </div>
+          <div class="body">
+            <div class="pillrow">
+              <span class="pill">Kern</span>
+              <span class="pill bo">Backoffice</span>
+            </div>
+            <div class="geo">
+              <div class="geotitle">
+                <strong>Geografie</strong><span>identiek</span>
+              </div>
+              <div class="grid">
+                <div class="item vl">Vlaanderen</div>
+                <div class="item">Antwerpen</div>
+                <div class="item">Oost-Vl</div>
+                <div class="item">West-Vl</div>
+                <div class="item">Vlaams-Br</div>
+                <div class="item">Limburg</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="footer">
+      <div class="note">
+        <strong>Toepassing in Teams & Odoo:</strong> gebruik exact dezelfde labels (01–08), plus de vaste substructuur
+        <strong>Kern</strong> en <strong>Backoffice</strong>, telkens met <strong>Vlaanderen</strong> en de 5 provincies.
+        Zo blijft navigatie, rapportering en eigenaarschap uniform, ook wanneer projecten wisselen.
+      </div>
+
+      <div class="outside" aria-label="Buiten projecten">
+        <h3>Buiten Projecten (context)</h3>
+        <div class="tags">
+          <span class="tag hr">HR</span>
+          <span class="tag legal">Legal (incl. RIZIV)</span>
+          <span class="tag it">IT</span>
+          <span class="tag ops">Operations</span>
+          <span class="tag">Jobstudenten/stagiairs: HR (contract) + Ops (inzet)</span>
+        </div>
+      </div>
+    </section>
   </div>
 </body>
 </html>
